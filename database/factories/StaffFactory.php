@@ -23,7 +23,7 @@ class StaffFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'address'=>fake()->address(),
             'phone_number'=>fake()->phoneNumber(),
-            'image_uri'=>fake()->text(100),
+            'image_uri'=>fake()->imageUrl(),
             'post'=>"Teacher",
             'rank'=>1,
             'major_in'=>"Mathematics",

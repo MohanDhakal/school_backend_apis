@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Auth\AuthenticationException;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::post('/register', [UserController::class,'register']);
+Route::post('/login', [UserController::class,'login']);
+
+Route::middleware('auth:sanctum','auth.token.expiration')->group(function () {
+        Route::apiResource('/users',UserController::class);
+        Route::get('/users/{id}', [UserController::class, 'show']);
+    
+        Route::apiResource('/staffs',StaffController::class);
+        Route::get('staffs/{id}', [StaffController::class,'show']);
+        Route::post('/staffs/add',[StaffController::class,'store']);
+    
 });
+

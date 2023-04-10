@@ -18,13 +18,13 @@ return new class extends Migration
             $table->timestamps();
             $table->string('full_name');
             $table->date('dob');
-            $table->string('level');
+            $table->string('level');//तह
             $table->string('address')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('email');
             $table->string('image_uri');
-            $table->string('post');
-            $table->integer('rank');
+            $table->string('post');//पद
+            $table->integer('rank');//श्रेणी
             $table->string('major_in');
             $table->date('joined_at');
             $table->string('job_type');

@@ -34,6 +34,13 @@ return [
             'driver' => 'local',
             'root' => storage_path('app'),
             'throw' => false,
+            'allowed' => [
+                'png',
+                'jpeg',
+                'pdf',
+                'docx',
+                'txt'
+            ],
         ],
 
         'public' => [
@@ -42,6 +49,14 @@ return [
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
+            'allowed' => [
+                'png',
+                'jpeg',
+                'pdf',
+                'docx',
+                'txt'
+            ],
+
         ],
 
         's3' => [
@@ -71,6 +86,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('staffs') => storage_path('app/staffs'),
+
     ],
 
 ];
