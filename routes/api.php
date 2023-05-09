@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -23,10 +24,10 @@ Route::post('/login', [UserController::class,'login']);
 Route::middleware('auth:sanctum','auth.token.expiration')->group(function () {
         Route::apiResource('/users',UserController::class);
         Route::get('/users/{id}', [UserController::class, 'show']);
-    
-        Route::apiResource('/staffs',StaffController::class);
-        Route::get('staffs/{id}', [StaffController::class,'show']);
         Route::post('/staffs/add',[StaffController::class,'store']);
-    
+        Route::get('staffs/{id}', [StaffController::class,'show']);
+        Route::get('staffs', [StaffController::class,'index']);
+        Route::post('/posts/add',[PostController::class,'store']);
+
 });
 

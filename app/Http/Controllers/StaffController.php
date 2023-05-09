@@ -48,7 +48,7 @@ class StaffController extends Controller
 
 
         $created=Staff::create($data);
-        Log::info($created);
+        // Log::info($created);
         if($created){
             $response= [
                 'success'=>true,

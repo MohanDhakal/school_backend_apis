@@ -22,8 +22,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $admins = DB::table('users')->get();
-        return $admins;  
+            $admins = DB::table('users')->get();
+            return $admins;  
     }
 
     /**
