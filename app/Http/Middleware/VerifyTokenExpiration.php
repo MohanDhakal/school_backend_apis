@@ -22,7 +22,7 @@ class VerifyTokenExpiration
         }
         $user=$request->user();
         // Log::info( json_encode($user->name));
-        $expiration = $request->user()->tokens()->where('name',$user->name )->first()->expires_at;
+        $expiration = $request->user()->tokens()->where('name',$user->name )->latest()->first()->expires_at;
 
         if (now()->gte($expiration)) {
             return response()->json(['message' => 'Token expired.'], 401);

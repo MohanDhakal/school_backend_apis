@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Auth\AuthenticationException;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,12 +22,21 @@ Route::post('/register', [UserController::class,'register']);
 Route::post('/login', [UserController::class,'login']);
 
 Route::middleware('auth:sanctum','auth.token.expiration')->group(function () {
+
         Route::apiResource('/users',UserController::class);
         Route::get('/users/{id}', [UserController::class, 'show']);
+
         Route::post('/staffs/add',[StaffController::class,'store']);
         Route::get('staffs/{id}', [StaffController::class,'show']);
         Route::get('staffs', [StaffController::class,'index']);
+
+        Route::get('posts', [PostController::class,'index']);
+        Route::get('posts/{id}', [PostController::class,'show']);
         Route::post('/posts/add',[PostController::class,'store']);
+
+        Route::get('students/grade/{grade}', [StudentController::class,'index']);
+        Route::get('students/{id}', [StudentController::class,'show']);
+        Route::post('/students/add',[StudentController::class,'store']);
 
 });
 

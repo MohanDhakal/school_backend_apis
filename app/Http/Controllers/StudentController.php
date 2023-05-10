@@ -1,31 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Post;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 
-class PostController extends Controller
+use App\Models\Student;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+class StudentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($grade)
     {
-        $posts = Post::paginate(5,[
-            'post_id',
-            'user_id',
-            'title',
-            'body',
-            'cover_image',
-            'updated_at'
-            ]);
-        return $posts;  
+        $students = Student::where('grade', '=', $grade)->paginate(10);
+        return $students;
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -34,7 +27,6 @@ class PostController extends Controller
      */
     public function create()
     {
-
         //
     }
 
@@ -46,18 +38,20 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $path = Storage::putFile('posts', $request->file('image'));
+        $path = Storage::putFile('students', $request->file('image'));
         $url = Storage::url($path);
         $image_uri = config('app.url') . '/' . $url;
-        $id = Auth::user()->id;
-        $request->merge(['cover_image' => $image_uri,'user_id' => $id]);
-        // print_r($request->all());
+
+        $request->merge(['image_uri' => $image_uri]);
         $data = $request->except(['image']);
-        $created = Post::create($data);
+
+        $data['is_active'] = $request['is_active'] === 'true';
+
+        $created = Student::create($data);
         if ($created) {
             $response = [
                 'success' => true,
-                'message' => "new post added successfully",
+                'message' => "student added successfully",
             ];
             return $response;
         }
@@ -76,15 +70,13 @@ class PostController extends Controller
     public function show($id)
     {
 
-        $post = DB::table('posts')
-                ->where('post_id', '=', $id)
-                ->get()->first();
-       if($post==null){
-        return [
-        'results:'=>"empty"
-        ];
+        $student = DB::table('students')->where('student_id', '=', $id )->first();  
+            if($student==null){
+            return [
+            'results:'=>"empty"
+            ];
        }
-    return $post;
+    return $student;
     }
 
     /**
@@ -116,7 +108,6 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function destroy($id)
     {
         //

@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
 {
@@ -62,21 +61,6 @@ class StaffController extends Controller
             'message'=>"error occured, please contact administrator",
         ];
 
-
-        // $name = $request->input('full_name');
-        // $dob=$request->input('dob');
-        // $address = $request->input('address');
-        // $phone_number=$request->input('phone_number');
-        // $email = $request->input('email');
-        // //पद 
-        // $post=$request->input('post');
-        // //shreni
-        // $rank=$request->input('rank');
-        // $major_in=$request->input('major_in');        
-        // $joined_at=$request->input('joined_at');
-        // $job_type=$request->input('job_type');
-        // $is_active=$request->input('is_active');
-
     }    
     /**
      * Display the specified resource.
@@ -86,7 +70,7 @@ class StaffController extends Controller
      */
     public function show($id)
     {
-        $staff = DB::table('staff')->find($id,
+        $student = DB::table('students')->find($id,
         [
             'id',
             'full_name',
@@ -95,19 +79,23 @@ class StaffController extends Controller
             'level',
             'image_uri',
             'post',
-            'rank',
+            'roll_number',
             'dob',
-            'phone_number',
+            'guardian_contact',
             'is_active',
-            'joined_at'
+            'joined_at',
+            'grade',
+            'current_rank',
+            'major_subject'
        ]);
-       if($staff==null){
+       if($student==null){
         return [
         'results:'=>"empty"
         ];
        }
-    return $staff;
+    return $student;
     }
+
 
     /**
      * Update the specified resource in storage.

@@ -10,5 +10,19 @@ class Student extends Model
     use HasFactory;
     protected $primaryKey='student_id';
     protected $dateFormat = 'Y-m-d';
+    protected $fillable=[
+        'full_name',
+        'dob',
+        'grade',
+        'address',
+        'guardian_contact',
+        'email',
+        'current_rank',
+        'joined_at',
+        'image_uri',
+        'major_subject',
+        'is_active',
+        'roll_number'
+    ];
 
 }
