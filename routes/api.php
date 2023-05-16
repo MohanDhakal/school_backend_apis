@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum','auth.token.expiration')->group(function () {
         Route::get('students/grade/{grade}', [StudentController::class,'index']);
         Route::get('students/{id}', [StudentController::class,'show']);
         Route::post('/students/add',[StudentController::class,'store']);
+        
 
 });
 
