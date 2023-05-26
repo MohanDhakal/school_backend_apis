@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staffs = Staff::paginate(5,[
+        $staffs = Staff::paginate(5, [
             'id',
             'full_name',
             'address',
@@ -23,9 +24,9 @@ class StaffController extends Controller
             'level',
             'image_uri',
             'post',
-            'is_active'            
+            'is_active'
         ]);
-        return $staffs;  
+        return $staffs;
     }
 
     /**
@@ -42,26 +43,24 @@ class StaffController extends Controller
 
         $request->merge(['image_uri' => $image_uri]);
         $data = $request->except(['image']);
-        
+
         $data['is_active'] = $request['is_active'] === 'true';
 
 
-        $created=Staff::create($data);
+        $created = Staff::create($data);
         // Log::info($created);
-        if($created){
-            $response= [
-                'success'=>true,
-                'message'=>"staff added successfully",
+        if ($created) {
+            $response = [
+                'success' => true,
+                'message' => "staff added successfully",
             ];
             return $response;
-
         }
         return  [
-            'success'=>false,
-            'message'=>"error occured, please contact administrator",
+            'success' => false,
+            'message' => "error occured, please contact administrator",
         ];
-
-    }    
+    }
     /**
      * Display the specified resource.
      *
@@ -70,30 +69,32 @@ class StaffController extends Controller
      */
     public function show($id)
     {
-        $student = DB::table('students')->find($id,
-        [
-            'id',
-            'full_name',
-            'address',
-            'email',
-            'level',
-            'image_uri',
-            'post',
-            'roll_number',
-            'dob',
-            'guardian_contact',
-            'is_active',
-            'joined_at',
-            'grade',
-            'current_rank',
-            'major_subject'
-       ]);
-       if($student==null){
-        return [
-        'results:'=>"empty"
-        ];
-       }
-    return $student;
+        $student = DB::table('students')->find(
+            $id,
+            [
+                'id',
+                'full_name',
+                'address',
+                'email',
+                'level',
+                'image_uri',
+                'post',
+                'roll_number',
+                'dob',
+                'guardian_contact',
+                'is_active',
+                'joined_at',
+                'grade',
+                'current_rank',
+                'major_subject'
+            ]
+        );
+        if ($student == null) {
+            return [
+                'results:' => "empty"
+            ];
+        }
+        return $student;
     }
 
 
@@ -117,6 +118,17 @@ class StaffController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $staff = Staff::find($id);
+        if ($staff == null) {
+            return [
+                "success" => false,
+                "message" => "staff does not exists"
+            ];
+        }
+        $staff->delete();
+        return [
+            "success" => true,
+            "message" => "staff deleted"
+        ];
     }
 }

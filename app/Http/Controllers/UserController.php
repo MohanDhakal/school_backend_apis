@@ -1,18 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
-    
+
     public $successStatus = 200;
 
     /**
@@ -22,8 +21,9 @@ class UserController extends Controller
      */
     public function index()
     {
-            $admins = DB::table('users')->get();
-            return $admins;  
+        $admins = User::all();
+        // $admins = DB::table('users')->get();
+        return $admins;
     }
 
     /**
@@ -34,7 +34,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        
     }
 
     /**
@@ -63,48 +62,36 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
     }
-    
+
     /** 
      * login api 
      * 
      * @return \Illuminate\Http\Response 
-     */ 
-    public function login(Request $request){ 
+     */
+    public function login(Request $request)
+    {
 
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
-    
-        $user = User::where('email', $credentials['email'])->first();
-    
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-             $exceptionMessage =ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-            // Log::error($exceptionMessage);
-            return response()->json(['error' => "The provided credentials are incorrect"], 400);            
-
+        $authenticated = Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')]);
+        $user = $request->user();
+        $emptyToken = $user->tokens->isEmpty();
+        if ($emptyToken == false) {
+            $user->tokens()->delete();
         }
-
-        $expires_at = now()->addMinutes(60); 
-        $new_access_token = $user->createToken($user->name,['expires_in' => 60],$expires_at);        
-        $access_token = $new_access_token->accessToken;            
-        $response= [
-            'success'=>true,
-            'message'=>"user logged in successfully",
-            'access_token'=>$new_access_token->plainTextToken,
-            'expires_in_min'=> $access_token->abilities['expires_in'],
-            'expires_at'=>$expires_at,
-        ];
-        return response()->json($response, 200);
+        $new_access_token = $user->createToken($user->name);
+        $user->tokens = $new_access_token;
+        $user->access_token = $new_access_token->plainTextToken;
+        return $user;
     }
 
     public function register(Request $request)
@@ -115,7 +102,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
             'c_password' => 'required|string|min:8|same:password',
         ];        //validation
-        
+
         $messages = [
             'name.required' => 'Please enter your name.',
             'email.required' => 'Please enter your email address.',
@@ -127,33 +114,46 @@ class UserController extends Controller
             'c_password.required' => 'Please confirm your password.',
             'c_password.min' => 'The confirmation password must be at least :min characters long.',
         ];
-        $validator = Validator::make($request->all(),$rules,$messages);
-        if($validator->fails()){            
+        $validator = Validator::make($request->all(), $rules, $messages);
+        if ($validator->fails()) {
             $errors = $validator->errors();
             return response()->json([
                 'success' => false,
                 'errors' => $errors
             ], 422);
-
-        }else{
+        } else {
             //return success
-            $input= $request->all();
-            $input['password']= bcrypt($input['password']);
-            $input['c_password']= bcrypt($input['c_password']);
-                 
-            $user=User::create($input);
-            $tokenName = $user->name . $user->id;
-            $success['name'] = $user->name;  
+            $input = $request->all();
+            $input['password'] = bcrypt($input['password']);
+            $input['c_password'] = bcrypt($input['c_password']);
 
-            $new_access_token = $user->createToken($tokenName,['expires_in' => 60],);        
-            $access_token = $new_access_token->accessToken;            
-            $response= [
-                'success'=>true,
-                'message'=>"user registered successfully",
-                'access_token'=>$new_access_token->plainTextToken,
-                'expires_in_min'=> $access_token->abilities['expires_in'],
+            $user = User::create($input);
+            $success['name'] = $user->name;
+            $new_access_token = $user->createToken($user->name);
+            $access_token = $new_access_token->accessToken;
+            $response = [
+                'success' => true,
+                'message' => "user registered successfully",
+                'access_token' => $new_access_token->plainTextToken,
             ];
-            return response()->json($response,200);
-           }
+            return response()->json($response, 200);
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        $user = $request->user();
+        $emptyToken = $user->tokens->isEmpty();
+        if ($emptyToken == false) {
+            $user->tokens()->delete();
+            return [
+                'success' => true,
+                'message' => "sucessfully logged out",
+            ];
+        }
+        return [
+            'success' => false,
+            'message' => "could not logout",
+        ];
     }
 }

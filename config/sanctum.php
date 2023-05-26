@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Laravel\Sanctum\Sanctum;
 
 return [
@@ -46,7 +47,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => 525600,
 
     /*
     |--------------------------------------------------------------------------

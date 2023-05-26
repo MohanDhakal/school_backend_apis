@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use PDO;
 
 class PostController extends Controller
 {
@@ -16,15 +18,15 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(5,[
+        $posts = Post::paginate(5, [
             'post_id',
             'user_id',
             'title',
             'body',
             'cover_image',
             'updated_at'
-            ]);
-        return $posts;  
+        ]);
+        return $posts;
     }
 
     /**
@@ -50,7 +52,7 @@ class PostController extends Controller
         $url = Storage::url($path);
         $image_uri = config('app.url') . '/' . $url;
         $id = Auth::user()->id;
-        $request->merge(['cover_image' => $image_uri,'user_id' => $id]);
+        $request->merge(['cover_image' => $image_uri, 'user_id' => $id]);
         // print_r($request->all());
         $data = $request->except(['image']);
         $created = Post::create($data);
@@ -77,14 +79,14 @@ class PostController extends Controller
     {
 
         $post = DB::table('posts')
-                ->where('post_id', '=', $id)
-                ->get()->first();
-       if($post==null){
-        return [
-        'results:'=>"empty"
-        ];
-       }
-    return $post;
+            ->where('post_id', '=', $id)
+            ->get()->first();
+        if ($post == null) {
+            return [
+                'results:' => "empty"
+            ];
+        }
+        return $post;
     }
 
     /**
@@ -119,6 +121,18 @@ class PostController extends Controller
 
     public function destroy($id)
     {
-        //
+
+        $post = Post::find($id);
+        if ($post == null) {
+            return [
+                "success" => false,
+                "message" => "post does not exists"
+            ];
+        }
+        $post->delete();
+        return [
+            "success" => true,
+            "message" => "post deleted"
+        ];
     }
 }

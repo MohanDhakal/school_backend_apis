@@ -17,17 +17,14 @@ class VerifyTokenExpiration
      */
     public function handle(Request $request, Closure $next)
     {
-        if (! $request->user() || $request->user()->tokenCan('expired')) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
+        if ($result = !$request->user()) {
+            return response()->json(['message' => 'Unauthenticated user found'], 401);
         }
-        $user=$request->user();
-        // Log::info( json_encode($user->name));
-        $expiration = $request->user()->tokens()->where('name',$user->name )->latest()->first()->expires_at;
-
+        $user = $request->user();
+        $expiration = $request->user()->tokens()->where('name', $user->name)->latest()->first()->expires_at;
         if (now()->gte($expiration)) {
-            return response()->json(['message' => 'Token expired.'], 401);
+            return response()->json(['message' => 'Token expired.', 'token_id' => $user->currentAccessToken()->id], 401);
         }
-
-        return $next($request);    
+        return $next($request);
     }
 }

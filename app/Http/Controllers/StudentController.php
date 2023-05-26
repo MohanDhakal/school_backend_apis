@@ -110,6 +110,16 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
-        //
-    }
+        $student = Student::find($id);
+        if ($student == null) {
+            return [
+                "success" => false,
+                "message" => "student does not exists"
+            ];
+        }
+        $student->delete();
+        return [
+            "success" => true,
+            "message" => "student deleted"
+        ];    }
 }

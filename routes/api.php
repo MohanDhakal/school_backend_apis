@@ -17,26 +17,33 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+//public routes
 Route::post('/register', [UserController::class,'register']);
 Route::post('/login', [UserController::class,'login']);
 
-Route::middleware('auth:sanctum','auth.token.expiration')->group(function () {
 
-        Route::apiResource('/users',UserController::class);
+// protected routes
+Route::middleware('auth:sanctum')->group(function () {
+
+        Route::get('/users', [UserController::class, 'index']);
         Route::get('/users/{id}', [UserController::class, 'show']);
-
+        Route::post('/users/logout', [UserController::class, 'logout']);
+        
         Route::post('/staffs/add',[StaffController::class,'store']);
         Route::get('staffs/{id}', [StaffController::class,'show']);
         Route::get('staffs', [StaffController::class,'index']);
+        Route::delete('/staffs/delete/{id}',[StaffController::class,'destroy']);
 
         Route::get('posts', [PostController::class,'index']);
-        Route::get('posts/{id}', [PostController::class,'show']);
+        Route::get('posts/{id}', [PostController::class,'show']);       
         Route::post('/posts/add',[PostController::class,'store']);
+        Route::delete('/posts/delete/{id}',[PostController::class,'destroy']);
 
         Route::get('students/grade/{grade}', [StudentController::class,'index']);
         Route::get('students/{id}', [StudentController::class,'show']);
         Route::post('/students/add',[StudentController::class,'store']);
+        Route::post('/students/add',[StudentController::class,'store']);
+        Route::delete('/students/delete/{id}',[StudentController::class,'destroy']);
         
 
 });

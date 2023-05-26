@@ -15,6 +15,8 @@ class Post extends Model
     protected $casts=[
         'body'=>'array'
     ];
+    protected $primaryKey='post_id';
+
     
  /**
      * The attributes that are mass assignable.
