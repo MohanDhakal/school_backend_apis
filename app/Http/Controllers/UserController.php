@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -38,8 +39,7 @@ class UserController extends Controller
 
     public function show(Request $request)
     {
-       return  $request->user();
-
+        return  $request->user();
     }
 
     /**
@@ -72,21 +72,24 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
         $authenticated = Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')]);
         $user = $request->user();
-        $emptyToken = $user->tokens->isEmpty();
-        if ($emptyToken == false) {
-            $user->tokens()->delete();
+        if ($authenticated) {
+            $emptyToken = $user->tokens->isEmpty();
+            if ($emptyToken == false) {
+                $user->tokens()->delete();
+            }
+            $new_access_token = $user->createToken($user->name);
+            $user->tokens = $new_access_token;
+            $user->access_token = $new_access_token->plainTextToken;
+            return $user;
+        } else {
+           return  response()->json(['success' => false, 'error' => 'Incorrect Email or Password.'], 401);
         }
-        $new_access_token = $user->createToken($user->name);
-        $user->tokens = $new_access_token;
-        $user->access_token = $new_access_token->plainTextToken;
-        return $user;
     }
 
     public function register(Request $request)

@@ -42,9 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('students/grade/{grade}', [StudentController::class,'index']);
         Route::get('students/{id}', [StudentController::class,'show']);
         Route::post('/students/add',[StudentController::class,'store']);
-        Route::post('/students/add',[StudentController::class,'store']);
         Route::delete('/students/delete/{id}',[StudentController::class,'destroy']);
         
-
 });
 
