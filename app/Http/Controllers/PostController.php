@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use PDO;
 
 class PostController extends Controller
@@ -23,6 +24,7 @@ class PostController extends Controller
             'user_id',
             'title',
             'body',
+            'slugs',
             'cover_image',
             'updated_at'
         ]);
@@ -48,13 +50,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $path = Storage::putFile('posts', $request->file('image'));
-        $url = Storage::url($path);
-        $image_uri = config('app.url') . '/' . $url;
+        Log::info($request->input());
+        $image_uri="http://localhost:8000/storage/posts/download.jpeg";
+        if ($request->hasFile('image')) {
+            $path = Storage::putFile('public/posts', $request->file('image'));
+            $url = Storage::url($path);
+            $image_uri = config('app.url') . $url;
+           }
         $id = Auth::user()->id;
         $request->merge(['cover_image' => $image_uri, 'user_id' => $id]);
         // print_r($request->all());
         $data = $request->except(['image']);
+
         $created = Post::create($data);
         if ($created) {
             $response = [
@@ -77,7 +84,6 @@ class PostController extends Controller
      */
     public function show($id)
     {
-
         $post = DB::table('posts')
             ->where('post_id', '=', $id)
             ->get()->first();
@@ -109,7 +115,22 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::find($id);
+        if ($post != null) {
+            Post::where("post_id", $id)->update([
+                "title" => $request->input("title"),
+                "body" => json_encode($request->input('body'))
+            ]);
+
+            return [
+                "success" => true,
+                "message" => "post has been updated"
+            ];
+        }
+        return [
+            "success" => false,
+            "message" => "post cannot be deleted"
+        ];
     }
 
     /**
@@ -126,7 +147,8 @@ class PostController extends Controller
         if ($post == null) {
             return [
                 "success" => false,
-                "message" => "post does not exists"
+                "message" => "post does not exists",
+                "code"=> 401
             ];
         }
         $post->delete();

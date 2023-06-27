@@ -13,7 +13,8 @@ class Post extends Model
     //by casting body can be automatically encoded and decoded
     //without calling jsonencode and decode
     protected $casts=[
-        'body'=>'array'
+        'body'=>'array',
+        'slugs'=>'array'
     ];
     protected $primaryKey='post_id';
 
@@ -27,7 +28,9 @@ class Post extends Model
         'user_id',
         'title',
         'body',
-        'cover_image'
+        'cover_image',
+        'slugs'
+
     ];
    
     public function user()
