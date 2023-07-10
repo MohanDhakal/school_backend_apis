@@ -50,13 +50,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        Log::info($request->input());
-        $image_uri="http://localhost:8000/storage/posts/download.jpeg";
+        // Log::info($request->input());
+        $image_uri = "http://localhost:8000/storage/posts/download.jpeg";
         if ($request->hasFile('image')) {
             $path = Storage::putFile('public/posts', $request->file('image'));
             $url = Storage::url($path);
             $image_uri = config('app.url') . $url;
-           }
+        } else {
+            Log::info("no image available");
+        }
+
         $id = Auth::user()->id;
         $request->merge(['cover_image' => $image_uri, 'user_id' => $id]);
         // print_r($request->all());
@@ -119,7 +122,7 @@ class PostController extends Controller
         if ($post != null) {
             Post::where("post_id", $id)->update([
                 "title" => $request->input("title"),
-                "body" => json_encode($request->input('body'))
+                "body" => $request->input('body')
             ]);
 
             return [
@@ -129,7 +132,8 @@ class PostController extends Controller
         }
         return [
             "success" => false,
-            "message" => "post cannot be deleted"
+            "message" => "post cannot be updated",
+            "response" => $post
         ];
     }
 
@@ -148,7 +152,7 @@ class PostController extends Controller
             return [
                 "success" => false,
                 "message" => "post does not exists",
-                "code"=> 401
+                "code" => 401
             ];
         }
         $post->delete();

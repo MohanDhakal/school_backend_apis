@@ -37,15 +37,12 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $path = Storage::putFile('staffs', $request->file('image'));
+        $path = Storage::putFile('public/staffs', $request->file('image'));
         $url = Storage::url($path);
-        $image_uri = config('app.url') . '/' . $url;
+        $image_uri = config('app.url')  . $url;
 
         $request->merge(['image_uri' => $image_uri]);
         $data = $request->except(['image']);
-
-        $data['is_active'] = $request['is_active'] === 'true';
-
 
         $created = Staff::create($data);
         // Log::info($created);
