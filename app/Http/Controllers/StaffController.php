@@ -16,16 +16,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staffs = Staff::paginate(5, [
-            'id',
-            'full_name',
-            'address',
-            'email',
-            'level',
-            'image_uri',
-            'post',
-            'is_active'
-        ]);
+        $staffs = Staff::paginate(5);
         return $staffs;
     }
 
@@ -35,6 +26,7 @@ class StaffController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         $path = Storage::putFile('public/staffs', $request->file('image'));
@@ -104,7 +96,21 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $staff = Staff::find($id);
+        if ($staff != null) {
+            Staff::where("id", $id)->update($request->except(["image"]));
+
+            return [
+                "success" => true,
+                "message" => "staff has been updated"
+            ];
+        }
+        return [
+            "success" => false,
+            "message" => "staff cannot be updated",
+            "response" => $staff
+        ];
+
     }
 
     /**
@@ -116,16 +122,21 @@ class StaffController extends Controller
     public function destroy($id)
     {
         $staff = Staff::find($id);
-        if ($staff == null) {
-            return [
-                "success" => false,
-                "message" => "staff does not exists"
-            ];
+        if ($staff != null) {
+            $deleted=$staff->delete();
+            if($deleted){
+                return [
+                    "success" => true,
+                    "message" => "staff deleted"
+                ];
+        
+            }
         }
-        $staff->delete();
         return [
-            "success" => true,
-            "message" => "staff deleted"
+
+            "success" => false,
+            "message" => "staff does not exists"
         ];
+
     }
 }

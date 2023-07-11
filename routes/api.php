@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('staffs/{id}', [StaffController::class,'show']);
         Route::get('staffs', [StaffController::class,'index']);
         Route::delete('/staffs/delete/{id}',[StaffController::class,'destroy']);
+        Route::post('/staffs/update/{id}',[StaffController::class,'update']);
 
         Route::get('posts', [PostController::class,'index']);
         Route::get('posts/{id}', [PostController::class,'show']);       
