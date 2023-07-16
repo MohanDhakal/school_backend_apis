@@ -121,5 +121,7 @@ class StudentController extends Controller
         return [
             "success" => true,
             "message" => "student deleted"
-        ];    }
+        ];   
+    
+    }
 }

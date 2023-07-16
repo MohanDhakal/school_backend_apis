@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
@@ -42,10 +44,20 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/posts/update/{id}',[PostController::class,'update']);
 
 
+        Route::post('/albums/add',[AlbumController::class,'store']);
+        Route::get('albums', [AlbumController::class,'index']);
+      
+        Route::get('/images', [ImageController::class,'index']);
+        Route::post('/images/add', [ImageController::class,'store']);
+        Route::get('/images/album/{id}', [ImageController::class,'show']);
+        Route::delete('/images/delete/{id}',[ImageController::class,'destroy']);
+
+
         Route::get('students/grade/{grade}', [StudentController::class,'index']);
         Route::get('students/{id}', [StudentController::class,'show']);
         Route::post('/students/add',[StudentController::class,'store']);
         Route::delete('/students/delete/{id}',[StudentController::class,'destroy']);
         
+
 });
 
