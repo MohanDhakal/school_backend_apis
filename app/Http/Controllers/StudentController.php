@@ -15,7 +15,7 @@ class StudentController extends Controller
      */
     public function index($grade)
     {
-        $students = Student::where('grade', '=', $grade)->paginate(10);
+        $students = Student::where('grade', '=', $grade)->paginate(5);
         return $students;
     }
 
@@ -38,15 +38,14 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $path = Storage::putFile('students', $request->file('image'));
-        $url = Storage::url($path);
-        $image_uri = config('app.url') . '/' . $url;
-
-        $request->merge(['image_uri' => $image_uri]);
+        if ($request->has("image")) {
+            $path = Storage::putFile('public/students', $request->file('image'));
+            $url = Storage::url($path);
+            $image_uri = config('app.url')  . $url;   
+            $request->merge(['image_uri' => $image_uri]);    
+        }
         $data = $request->except(['image']);
-
         $data['is_active'] = $request['is_active'] === 'true';
-
         $created = Student::create($data);
         if ($created) {
             $response = [

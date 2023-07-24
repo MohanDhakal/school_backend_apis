@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 //public routes
 Route::post('/register', [UserController::class,'register']);
 Route::post('/login', [UserController::class,'login']);
+Route::get('albums', [AlbumController::class,'index']);
+Route::get('/images/album/{id}', [ImageController::class,'show']);
 
 
 // protected routes
@@ -45,11 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
         Route::post('/albums/add',[AlbumController::class,'store']);
-        Route::get('albums', [AlbumController::class,'index']);
       
         Route::get('/images', [ImageController::class,'index']);
         Route::post('/images/add', [ImageController::class,'store']);
-        Route::get('/images/album/{id}', [ImageController::class,'show']);
         Route::delete('/images/delete/{id}',[ImageController::class,'destroy']);
 
 

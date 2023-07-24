@@ -77,7 +77,6 @@ class ImageController extends Controller
         ->where('folder_id', '=', $id)
         ->get();
         return $images;
-
     }
 
     /**
