@@ -22,8 +22,15 @@ use Illuminate\Support\Facades\Route;
 //public routes
 Route::post('/register', [UserController::class,'register']);
 Route::post('/login', [UserController::class,'login']);
+
 Route::get('albums', [AlbumController::class,'index']);
 Route::get('/images/album/{id}', [ImageController::class,'show']);
+
+Route::get('staffs/{id}', [StaffController::class,'show']);
+Route::get('staffs', [StaffController::class,'index']);
+
+Route::get('students/{id}', [StudentController::class,'show']);
+Route::get('students/grade/{grade}', [StudentController::class,'index']);
 
 
 // protected routes
@@ -34,8 +41,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/users/logout', [UserController::class, 'logout']);
         
         Route::post('/staffs/add',[StaffController::class,'store']);
-        Route::get('staffs/{id}', [StaffController::class,'show']);
-        Route::get('staffs', [StaffController::class,'index']);
         Route::delete('/staffs/delete/{id}',[StaffController::class,'destroy']);
         Route::post('/staffs/update/{id}',[StaffController::class,'update']);
 
@@ -52,9 +57,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/images/add', [ImageController::class,'store']);
         Route::delete('/images/delete/{id}',[ImageController::class,'destroy']);
 
-
-        Route::get('students/grade/{grade}', [StudentController::class,'index']);
-        Route::get('students/{id}', [StudentController::class,'show']);
         Route::post('/students/add',[StudentController::class,'store']);
         Route::delete('/students/delete/{id}',[StudentController::class,'destroy']);
         
