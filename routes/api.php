@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StaffController;
@@ -29,8 +30,12 @@ Route::get('/images/album/{id}', [ImageController::class,'show']);
 Route::get('staffs/{id}', [StaffController::class,'show']);
 Route::get('staffs', [StaffController::class,'index']);
 
-Route::get('students/{id}', [StudentController::class,'show']);
-Route::get('students/grade/{grade}', [StudentController::class,'index']);
+Route::get('/students', [StudentController::class,'index']);      
+Route::get('/students/{id}', [StudentController::class,'show']);
+Route::get('/students/grade/{grade}', [StudentController::class,'all']);  
+
+Route::get('/file/downloads', [FileController::class,'download']);      
+Route::get('/files/{directory}', [FileController::class,'index']);      
 
 
 // protected routes
@@ -49,7 +54,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/posts/add',[PostController::class,'store']);
         Route::delete('posts/delete/{id}',[PostController::class,'destroy']);
         Route::post('/posts/update/{id}',[PostController::class,'update']);
-
 
         Route::post('/albums/add',[AlbumController::class,'store']);
       

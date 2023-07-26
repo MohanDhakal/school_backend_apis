@@ -6,20 +6,30 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class StudentController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
-    public function index($grade)
+    public function index()
+    {
+        $students = Student::all();
+        return $students;
+    }
+
+    /**
+     * Display a listing of the resource.
+     * @param  int  $grade
+     * @return \Illuminate\Http\Response
+     */
+    public function all($grade)
     {
         $students = Student::where('grade', '=', $grade)->paginate(5);
         return $students;
     }
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -41,8 +51,8 @@ class StudentController extends Controller
         if ($request->has("image")) {
             $path = Storage::putFile('public/students', $request->file('image'));
             $url = Storage::url($path);
-            $image_uri = config('app.url')  . $url;   
-            $request->merge(['image_uri' => $image_uri]);    
+            $image_uri = config('app.url')  . $url;
+            $request->merge(['image_uri' => $image_uri]);
         }
         $data = $request->except(['image']);
         $data['is_active'] = $request['is_active'] === 'true';
@@ -69,13 +79,10 @@ class StudentController extends Controller
     public function show($id)
     {
 
-        $student = DB::table('students')->where('student_id', '=', $id )->first();  
-            if($student==null){
-            return [
-            'results:'=>"empty"
-            ];
-       }
-    return $student;
+        $student = DB::table('students')->where('student_id', '=', $id)->first();
+        if ($student == null) {
+        }
+        return $student;
     }
 
     /**
@@ -120,7 +127,6 @@ class StudentController extends Controller
         return [
             "success" => true,
             "message" => "student deleted"
-        ];   
-    
+        ];
     }
 }

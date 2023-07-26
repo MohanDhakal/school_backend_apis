@@ -58,32 +58,15 @@ class StaffController extends Controller
      */
     public function show($id)
     {
-        $student = DB::table('students')->find(
-            $id,
-            [
-                'id',
-                'full_name',
-                'address',
-                'email',
-                'level',
-                'image_uri',
-                'post',
-                'roll_number',
-                'dob',
-                'guardian_contact',
-                'is_active',
-                'joined_at',
-                'grade',
-                'current_rank',
-                'major_subject'
-            ]
+        $staffs = DB::table('staff')->find(
+            $id
         );
-        if ($student == null) {
+        if ($staffs == null) {
             return [
                 'results:' => "empty"
             ];
         }
-        return $student;
+        return $staffs;
     }
 
 
@@ -110,7 +93,6 @@ class StaffController extends Controller
             "message" => "staff cannot be updated",
             "response" => $staff
         ];
-
     }
 
     /**
@@ -123,13 +105,12 @@ class StaffController extends Controller
     {
         $staff = Staff::find($id);
         if ($staff != null) {
-            $deleted=$staff->delete();
-            if($deleted){
+            $deleted = $staff->delete();
+            if ($deleted) {
                 return [
                     "success" => true,
                     "message" => "staff deleted"
                 ];
-        
             }
         }
         return [
@@ -137,6 +118,5 @@ class StaffController extends Controller
             "success" => false,
             "message" => "staff does not exists"
         ];
-
     }
 }
