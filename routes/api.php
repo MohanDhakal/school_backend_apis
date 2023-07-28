@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PostController;
@@ -34,8 +35,11 @@ Route::get('/students', [StudentController::class,'index']);
 Route::get('/students/{id}', [StudentController::class,'show']);
 Route::get('/students/grade/{grade}', [StudentController::class,'all']);  
 
-Route::get('/file/downloads', [FileController::class,'download']);      
+Route::get('/files/downloads', [FileController::class,'download']);      
 Route::get('/files/{directory}', [FileController::class,'index']);      
+Route::post('/feedback/add', [FeedbackController::class, 'store']);
+Route::get('/feedback', [FeedbackController::class, 'index']);
+
 
 
 // protected routes
