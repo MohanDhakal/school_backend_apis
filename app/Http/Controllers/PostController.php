@@ -19,7 +19,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::paginate(5, [
+        $posts=Post::all(
+            [
             'post_id',
             'user_id',
             'title',
@@ -27,7 +28,18 @@ class PostController extends Controller
             'slugs',
             'cover_image',
             'updated_at'
-        ]);
+            ]
+        );
+    
+        // $posts = Post::paginate(5, [
+        //     'post_id',
+        //     'user_id',
+        //     'title',
+        //     'body',
+        //     'slugs',
+        //     'cover_image',
+        //     'updated_at'
+        // ]);
         return $posts;
     }
 

@@ -40,7 +40,8 @@ Route::get('/files/{directory}', [FileController::class,'index']);
 Route::post('/feedback/add', [FeedbackController::class, 'store']);
 Route::get('/feedback', [FeedbackController::class, 'index']);
 
-
+Route::get('posts', [PostController::class,'index']);
+Route::get('posts/{id}', [PostController::class,'show']);       
 
 // protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -53,8 +54,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/staffs/delete/{id}',[StaffController::class,'destroy']);
         Route::post('/staffs/update/{id}',[StaffController::class,'update']);
 
-        Route::get('posts', [PostController::class,'index']);
-        Route::get('posts/{id}', [PostController::class,'show']);       
         Route::post('/posts/add',[PostController::class,'store']);
         Route::delete('posts/delete/{id}',[PostController::class,'destroy']);
         Route::post('/posts/update/{id}',[PostController::class,'update']);
