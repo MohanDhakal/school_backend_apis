@@ -19,19 +19,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts=Post::all(
-            [
-            'post_id',
-            'user_id',
-            'title',
-            'body',
-            'slugs',
-            'cover_image',
-            'updated_at'
-            ]
-        );
-    
-        // $posts = Post::paginate(5, [
+        // $posts=Post::all(
+        //     [
         //     'post_id',
         //     'user_id',
         //     'title',
@@ -39,7 +28,18 @@ class PostController extends Controller
         //     'slugs',
         //     'cover_image',
         //     'updated_at'
-        // ]);
+        //     ]
+        // );
+    
+        $posts = Post::paginate(5, [
+            'post_id',
+            'user_id',
+            'title',
+            'body',
+            'slugs',
+            'cover_image',
+            'updated_at'
+        ]);
         return $posts;
     }
 
@@ -62,7 +62,6 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // Log::info($request->input());
         $image_uri = "http://localhost:8000/storage/posts/download.jpeg";
         if ($request->hasFile('image')) {
             $path = Storage::putFile('public/posts', $request->file('image'));
@@ -118,7 +117,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -173,4 +172,7 @@ class PostController extends Controller
             "message" => "post deleted"
         ];
     }
+
+    
+
 }

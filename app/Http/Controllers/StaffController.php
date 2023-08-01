@@ -35,7 +35,7 @@ class StaffController extends Controller
 
         $request->merge(['image_uri' => $image_uri]);
         $data = $request->except(['image']);
-
+        $data['is_active'] = $request['is_active'] === 'true';
         $created = Staff::create($data);
         // Log::info($created);
         if ($created) {

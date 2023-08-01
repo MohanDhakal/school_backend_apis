@@ -31,21 +31,19 @@ class ImageController extends Controller
     {
         $album_id = $request->input("folder_id");
         $album = Album::findOrFail($album_id);
-        $columnName = "name";
-        $columnValue = $album->{$columnName};
+        $columnValue = $album->{"name"};
         if ($request->hasFile('images')) {
+            Log::info($columnValue);
             $image = $request->file('images');
             $path = public_path($columnValue);
-            $relativePath = str_replace(base_path(), '', $path);
-            $relativePath = str_replace("public/", '', $relativePath);
+            // $folderPath = str_replace(base_path(), '', $path);
+            // $relativePath = str_replace("public/", '', $folderPath);
+            $base_url = asset($columnValue);
 
             foreach ($image as $key => $value) {
-                $name = time() . $key . '.' . $value->getClientOriginalExtension();
-                
+                $name = time() . $key . '.' . $value->getClientOriginalExtension();                
                 $value->move($path, $name);
-                $image_uri = config('app.url') .$relativePath.
-                '/'. $name;
-
+                $image_uri = $base_url.'/'. $name;
                 $data = [
                     'folder_id' => $album_id, // Replace with the desired ID
                     'image_url' => $image_uri, // Replace with the desired folder name

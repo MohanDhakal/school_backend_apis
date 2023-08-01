@@ -28,8 +28,8 @@ Route::post('/login', [UserController::class,'login']);
 Route::get('albums', [AlbumController::class,'index']);
 Route::get('/images/album/{id}', [ImageController::class,'show']);
 
-Route::get('staffs/{id}', [StaffController::class,'show']);
 Route::get('staffs', [StaffController::class,'index']);
+Route::get('staffs/{id}', [StaffController::class,'show']);
 
 Route::get('/students', [StudentController::class,'index']);      
 Route::get('/students/{id}', [StudentController::class,'show']);
