@@ -108,7 +108,22 @@ class PostController extends Controller
         }
         return $post;
     }
-
+    public function author($id)
+    {
+        $user = DB::table('users')
+            ->where('id', '=', $id)
+            ->get()->first();
+        if ($user == null) {
+            return [
+                'results:' => "empty"
+            ];
+        }
+        return [
+            "id"=>$user->id,
+            "name"=> $user->name,
+            "email"=>$user->email,
+        ];
+    }
     /**
      * Show the form for editing the specified resource.
      *

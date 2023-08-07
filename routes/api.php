@@ -42,6 +42,7 @@ Route::get('/feedback', [FeedbackController::class, 'index']);
 
 Route::get('posts', [PostController::class,'index']);
 Route::get('posts/{id}', [PostController::class,'show']);       
+Route::get('posts/user/{id}', [PostController::class,'author']);       
 
 // protected routes
 Route::middleware('auth:sanctum')->group(function () {
