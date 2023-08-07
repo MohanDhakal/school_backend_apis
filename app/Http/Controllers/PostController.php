@@ -98,14 +98,15 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = DB::table('posts')
-            ->where('post_id', '=', $id)
-            ->get()->first();
-        if ($post == null) {
-            return [
-                'results:' => "empty"
-            ];
-        }
+        // $post = DB::table('posts')
+        //     ->where('post_id', '=', $id)
+        //     ->get()->first();
+        // if ($post == null) {
+        //     return [
+        //         'results:' => "empty"
+        //     ];
+        // }
+        $post=Post::find($id);
         return $post;
     }
     public function author($id)
