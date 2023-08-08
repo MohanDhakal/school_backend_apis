@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
-    
+
     /**
      * Display a listing of the resource.
      * @return \Illuminate\Http\Response
@@ -27,7 +27,9 @@ class StudentController extends Controller
      */
     public function all($grade)
     {
-        $students = Student::where('grade', '=', $grade)->paginate(5);
+        $students = Student::where('grade', '=', $grade)
+            ->orderBy('roll_number', 'asc')
+            ->paginate(5);
         return $students;
     }
     /**
