@@ -6,6 +6,7 @@ use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class StaffController extends Controller
 {
@@ -16,8 +17,11 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $staffs = Staff::paginate(5);
-        return $staffs;
+        $sortedResults = Staff::orderByRaw('level_int + rank DESC')
+                           ->orderBy('joined_at', 'ASC')
+                           ->paginate(5);
+        // $sortedData = Staff::orderBy('joined_at', 'asc')->paginate(5);
+        return $sortedResults;
     }
 
     /**
@@ -29,15 +33,14 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
+        Log::info($request->all());
         $path = Storage::putFile('public/staffs', $request->file('image'));
         $url = Storage::url($path);
         $image_uri = config('app.url')  . $url;
-
         $request->merge(['image_uri' => $image_uri]);
         $data = $request->except(['image']);
         $data['is_active'] = $request['is_active'] === 'true';
         $created = Staff::create($data);
-        // Log::info($created);
         if ($created) {
             $response = [
                 'success' => true,
@@ -114,7 +117,6 @@ class StaffController extends Controller
             }
         }
         return [
-
             "success" => false,
             "message" => "staff does not exists"
         ];

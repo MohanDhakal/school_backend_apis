@@ -25,6 +25,7 @@ class Staff extends Model
         'email',
         'post',
         'rank',
+        'level_int',
         'major_in',
         'joined_at',
         'image_uri',
