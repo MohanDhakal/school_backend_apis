@@ -6,7 +6,6 @@ use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class StaffController extends Controller
 {
@@ -33,7 +32,7 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
-        Log::info($request->all());
+        // Log::info($request->all());
         $path = Storage::putFile('public/staffs', $request->file('image'));
         $url = Storage::url($path);
         $image_uri = config('app.url')  . $url;
