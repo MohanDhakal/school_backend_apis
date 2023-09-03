@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Feedback;
+use App\Models\Member;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class FeedbackController extends Controller
+class MemberController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,14 +14,9 @@ class FeedbackController extends Controller
      */
     public function index()
     {
-        $feebacks = Feedback::paginate(5, [
-            'id',
-            'name',
-            'email',
-            'phone_number',
-            'message',
-        ]);
-        return $feebacks;
+        $members = Member::all();
+        return $members;
+
     }
 
     /**
@@ -32,7 +26,7 @@ class FeedbackController extends Controller
      */
     public function create()
     {
-
+        
     }
 
     /**
@@ -43,18 +37,18 @@ class FeedbackController extends Controller
      */
     public function store(Request $request)
     {
-        $created = Feedback::create($request->all());
+        $created = Member::create($request->all());
         if ($created) {
             $response = [
                 'success' => true,
-                'message' => "feedback received successfully",
+                'message' => "member created successfully",
             ];
             return $response;
         }
         return  [
             'success' => false,
             'message' => "error occured, please contact administrator",
-        ];    
+        ];
 
     }
 
@@ -66,7 +60,7 @@ class FeedbackController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -100,6 +94,17 @@ class FeedbackController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $member = Member::find($id);
+        if ($member == null) {
+            return [
+                "success" => false,
+                "message" => "member does not exists"
+            ];
+        }
+        $member->delete();
+        return [
+            "success" => true,
+            "message" => "member deleted"
+        ];
     }
 }

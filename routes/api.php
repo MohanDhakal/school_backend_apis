@@ -4,6 +4,7 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
@@ -38,11 +39,13 @@ Route::get('/students/grade/{grade}', [StudentController::class,'all']);
 Route::get('/files/downloads', [FileController::class,'download']);      
 Route::get('/files/{directory}', [FileController::class,'index']);      
 Route::post('/feedback/add', [FeedbackController::class, 'store']);
-Route::get('/feedback', [FeedbackController::class, 'index']);
 
 Route::get('posts', [PostController::class,'index']);
 Route::get('posts/{id}', [PostController::class,'show']);       
 Route::get('posts/user/{id}', [PostController::class,'author']);       
+Route::get('/feedbacks', [FeedbackController::class, 'index']);
+Route::get('/members', [MemberController::class, 'index']);
+Route::post('add/member', [MemberController::class,'store']);
 
 // protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -67,6 +70,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('/students/add',[StudentController::class,'store']);
         Route::delete('/students/delete/{id}',[StudentController::class,'destroy']);
+        
+        Route::delete('/members/delete/{id}',[MemberController::class,'destroy']);
         
 
 });
