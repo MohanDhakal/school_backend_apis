@@ -19,28 +19,18 @@ class PostController extends Controller
      */
     public function index()
     {
-        // $posts=Post::all(
-        //     [
-        //     'post_id',
-        //     'user_id',
-        //     'title',
-        //     'body',
-        //     'slugs',
-        //     'cover_image',
-        //     'updated_at'
-        //     ]
-        // );
-    
-        $posts = Post::paginate(5, [
+
+
+        $blogs = Post::select(
             'post_id',
             'user_id',
             'title',
             'body',
             'slugs',
             'cover_image',
-            'updated_at'
-        ]);
-        return $posts;
+            'updated_at',
+        )->orderBy('updated_at', 'desc')->get();
+        return $blogs;
     }
 
     /**
@@ -62,7 +52,6 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $image_uri = "http://localhost:8000/storage/posts/download.jpeg";
         if ($request->hasFile('image')) {
             $path = Storage::putFile('public/posts', $request->file('image'));
             $url = Storage::url($path);
@@ -106,7 +95,7 @@ class PostController extends Controller
         //         'results:' => "empty"
         //     ];
         // }
-        $post=Post::find($id);
+        $post = Post::find($id);
         return $post;
     }
     public function author($id)
@@ -120,9 +109,9 @@ class PostController extends Controller
             ];
         }
         return [
-            "id"=>$user->id,
-            "name"=> $user->name,
-            "email"=>$user->email,
+            "id" => $user->id,
+            "name" => $user->name,
+            "email" => $user->email,
         ];
     }
     /**
@@ -133,7 +122,6 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-
     }
 
     /**
@@ -188,7 +176,4 @@ class PostController extends Controller
             "message" => "post deleted"
         ];
     }
-
-    
-
 }
