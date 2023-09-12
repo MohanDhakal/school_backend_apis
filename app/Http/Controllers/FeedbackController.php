@@ -19,7 +19,7 @@ class FeedbackController extends Controller
             'id',
             'name',
             'email',
-            'phone',
+            'phone_number',
             'message',
         ]);
         return $feebacks;

@@ -6,6 +6,7 @@ use App\Models\Student;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class StudentController extends Controller
 {
@@ -54,6 +55,8 @@ class StudentController extends Controller
             $path = Storage::putFile('public/students', $request->file('image'));
             $url = Storage::url($path);
             $image_uri = config('app.url')  . $url;
+            Log::info(config('app.url'));
+            Log::info($url);
             $request->merge(['image_uri' => $image_uri]);
         }
         $data = $request->except(['image']);
