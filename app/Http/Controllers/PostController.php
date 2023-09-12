@@ -1,14 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Support\Facades\Auth;
 use App\Models\Post;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use PDO;
 
 class PostController extends Controller
 {
@@ -19,8 +16,6 @@ class PostController extends Controller
      */
     public function index()
     {
-
-
         $blogs = Post::select(
             'post_id',
             'user_id',
@@ -29,7 +24,7 @@ class PostController extends Controller
             'slugs',
             'cover_image',
             'updated_at',
-        )->orderBy('updated_at', 'desc')->get();
+        )->orderBy('updated_at', 'desc')->paginate(3);
         return $blogs;
     }
 
