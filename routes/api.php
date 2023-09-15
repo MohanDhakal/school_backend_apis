@@ -38,6 +38,8 @@ Route::get('/students/grade/{grade}', [StudentController::class,'all']);
 
 Route::get('/files/downloads', [FileController::class,'download']);      
 Route::get('/files/{directory}', [FileController::class,'index']);      
+Route::post('/files/upload', [FileController::class,'upload']);
+Route::post('/files/delete', [FileController::class,'deleteFile']);      
 Route::post('/feedback/add', [FeedbackController::class, 'store']);
 
 Route::get('posts', [PostController::class,'index']);
