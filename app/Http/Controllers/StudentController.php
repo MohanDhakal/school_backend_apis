@@ -90,6 +90,25 @@ class StudentController extends Controller
         return $student;
     }
 
+    public function verify(Request $request)
+    {
+        $roll_number =$request->input("roll_number");
+        $dob=$request->input("dob");
+        $grade=$request->input("grade");
+        $student = Student::where('roll_number', $roll_number)
+                    ->where('dob', $dob)
+                    ->where('grade', $grade)
+                    ->get();
+                    Log::info($student);
+        if ($student == null) {
+            return [
+                'students:' => "empty"
+            ];
+
+        }
+        return $student;
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

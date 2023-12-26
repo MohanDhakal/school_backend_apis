@@ -6,8 +6,10 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ResultsController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,7 +41,8 @@ Route::get('/students/grade/{grade}', [StudentController::class,'all']);
 Route::get('/files/downloads', [FileController::class,'download']);      
 Route::get('/files/{directory}', [FileController::class,'index']);      
 Route::post('/files/upload', [FileController::class,'upload']);
-Route::post('/files/delete', [FileController::class,'deleteFile']);      
+Route::post('/files/delete', [FileController::class,'delet
+eFile']);      
 Route::post('/feedback/add', [FeedbackController::class, 'store']);
 
 Route::get('posts', [PostController::class,'index']);
@@ -48,6 +51,9 @@ Route::get('posts/user/{id}', [PostController::class,'author']);
 Route::get('/feedbacks', [FeedbackController::class, 'index']);
 Route::get('/members', [MemberController::class, 'index']);
 Route::post('add/member', [MemberController::class,'store']);
+Route::post('/results/display', [ResultsController::class,'show_result']);
+Route::post('/students/verify', [StudentController::class,'verify']);
+
 
 // protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -74,7 +80,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/students/delete/{id}',[StudentController::class,'destroy']);
         
         Route::delete('/members/delete/{id}',[MemberController::class,'destroy']);
-        
 
+        Route::post('/results/add', [ResultsController::class,'store']);
+        Route::get('/subjects', [SubjectController::class,'index']);
+        Route::post('/subjects/add', [SubjectController::class,'store']);
+
+
+        
 });
 

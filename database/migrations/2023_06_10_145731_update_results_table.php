@@ -13,11 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('staff', function ($table) {
-            $table->integer('level_int')->default(2)->after('rank');
+        Schema::table('results', function ($table) {
+            $table->integer('grade')->after('student_id');
         });
     }
-    
     // Schema::table('your_table_name', function (Blueprint $table) {
     //     $table->decimal('your_column_name', 8, 2)->change();
     // });
@@ -28,8 +27,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('staff', function (Blueprint $table) {
-            $table->dropColumn('level_int');
+        Schema::table('results', function (Blueprint $table) {
+            $table->dropColumn('grade');
         });    
     }
 };

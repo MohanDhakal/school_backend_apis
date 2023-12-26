@@ -9,6 +9,13 @@ class Subject extends Model
 {
     use HasFactory;
     public $timestamps = false;
+    protected $fillable=[
+        'staff_id',
+        'subject_name',
+        'of_grade'
+
+    ];
+
     public function staff()
     {
         return $this->belongsTo(Staff::class);
