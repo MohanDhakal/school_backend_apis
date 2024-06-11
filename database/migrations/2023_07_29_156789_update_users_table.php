@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('results', function ($table) {
-            $table->integer('grade')->after('student_id');
+        Schema::table('users', function ($table) {
+            $table->string('bio')->after('email');
         });
     }
-    // Schema::table('your_table_name', function (Blueprint $table) {
-    //     $table->decimal('your_column_name', 8, 2)->change();
-    // });
+
     /**
      * Reverse the migrations.
      *
@@ -27,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('results', function (Blueprint $table) {
-            $table->dropColumn('grade');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('bio');
         });    
     }
 };

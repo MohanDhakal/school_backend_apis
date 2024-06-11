@@ -8,36 +8,29 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('results', function (Blueprint $table) {
             $table->id();
-            // $table->timestamps();
+            $table->foreignId("exam_id")->index();
+            $table->foreign('exam_id')->on('exam')->references('id');
             $table->foreignId("student_id")->index();
             $table->foreign('student_id')->on('students')->references('student_id');
-            $table->integer("academic_year");            
-            $table->integer("term");
             $table->foreignId("subject_id")->index();
             $table->foreign('subject_id')->on('subjects')->references('subject_id');
-            $table->integer("full_marks");
-            $table->integer("pass_marks");
-            $table->integer("obtained_marks");
-            $table->integer("remarks");
- 
+            $table->string("marks_type");
+            $table->float("marks", 8, 2);
+            $table->string("grade");
+            $table->timestamps();
         });
-
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('results');
+        Schema::dropIfExists('exams');
     }
 };

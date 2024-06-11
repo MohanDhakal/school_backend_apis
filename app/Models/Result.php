@@ -8,22 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Result extends Model
 {
     use HasFactory;
-         /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    public $timestamps = false;
-
-     protected $fillable=[
-        'student_id',        
-        'academic_year',
-        'term',
+    protected $fillable=[
+        'exam_id',
+        'student_id',
         'subject_id',
-        'full_marks',
-        'pass_marks',
-        'obtained_marks',
-        'remarks',
-        'grade'
+        'marks_type', //theory or internal 
+        'marks',
+        'grade'//calculate it using th_w or in_w
     ];
 }

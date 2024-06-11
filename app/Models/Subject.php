@@ -12,13 +12,19 @@ class Subject extends Model
     protected $fillable=[
         'staff_id',
         'subject_name',
-        'of_grade'
-
+        'of_grade',
+        'course_id',    
+        'sub_code',
+        'TH_W',
+        'IN_W'   
     ];
 
     public function staff()
     {
         return $this->belongsTo(Staff::class);
     }
-
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

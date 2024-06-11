@@ -32,6 +32,7 @@ Route::get('albums', [AlbumController::class,'index']);
 Route::get('/images/album/{id}', [ImageController::class,'show']);
 
 Route::get('staffs', [StaffController::class,'index']);
+Route::get('test', [StaffController::class,'test']);
 Route::get('staffs/{id}', [StaffController::class,'show']);
 
 Route::get('/students', [StudentController::class,'index']);      
@@ -41,8 +42,7 @@ Route::get('/students/grade/{grade}', [StudentController::class,'all']);
 Route::get('/files/downloads', [FileController::class,'download']);      
 Route::get('/files/{directory}', [FileController::class,'index']);      
 Route::post('/files/upload', [FileController::class,'upload']);
-Route::post('/files/delete', [FileController::class,'delet
-eFile']);      
+Route::post('/files/delete', [FileController::class,'deleteFile']);      
 Route::post('/feedback/add', [FeedbackController::class, 'store']);
 
 Route::get('posts', [PostController::class,'index']);

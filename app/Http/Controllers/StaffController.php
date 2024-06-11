@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Anuzpandey\LaravelNepaliDate\LaravelNepaliDate;
+
 
 class StaffController extends Controller
 {
@@ -18,9 +20,12 @@ class StaffController extends Controller
     public function index()
     {
         $sortedResults = Staff::orderByRaw('level_int + rank DESC')
-                           ->orderBy('joined_at', 'ASC')
-                           ->paginate(5);
-        // $sortedData = Staff::orderBy('joined_at', 'asc')->paginate(5);
+            ->orderBy('joined_at', 'ASC')
+            ->paginate(5);
+        foreach ($sortedResults as $row) {          
+            $row->dob = LaravelNepaliDate::from($row->dob)->toNepaliDate();
+            $row->joined_at = LaravelNepaliDate::from($row->joined_at)->toNepaliDate();
+        }
         return $sortedResults;
     }
 
@@ -33,16 +38,23 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
-        Log::info($request->all());
         $path = Storage::putFile('public/staffs', $request->file('image'));
         $url = Storage::url($path);
         $image_uri = config('app.url')  . $url;
         $request->merge(['image_uri' => $image_uri]);
         $data = $request->except(['image']);
+        // $dateInBS = str_replace('/', '-', $request['dob']);
         $data['is_active'] = $request['is_active'] === 'true';
+        Log::info($request['dob']);
+        Log::info($request['joined_at']);
+        $data['dob'] = LaravelNepaliDate::from($data['dob'])->toEnglishDate();
+        $data['joined_at'] = LaravelNepaliDate::from($data['joined_at'])->toEnglishDate();
+        Log::info($data['dob']);
+        Log::info($data['joined_at']);
+
         $created = Staff::create($data);
         if ($created) {
-            $response = [
+            $response = [   
                 'success' => true,
                 'message' => "staff added successfully",
             ];
@@ -120,5 +132,13 @@ class StaffController extends Controller
             "success" => false,
             "message" => "staff does not exists"
         ];
+    }
+    public function test()
+    {
+        $response = [
+            'success' => true,
+            'message' => "staff added successfully",
+        ];
+        return $response;
     }
 }

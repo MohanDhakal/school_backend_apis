@@ -6,15 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
+      /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::table('users', function ($table) {
-            $table->string('bio')->after('c_password');
+        Schema::table('subjects', function ($table) {
+            $table->float('TH_W', 8, 4)->change(); 
+            $table->float('IN_W', 8, 4)->change(); 
+
         });
     }
 
@@ -25,8 +27,11 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('bio');
-        });    
+        Schema::table('subjects', function (Blueprint $table) {
+            $table->string('TH_W')->change(); // Change to string
+            $table->string('IN_W')->change(); // Change to string
+
+        });  
     }
+ 
 };
