@@ -9,6 +9,9 @@ class Subject extends Model
 {
     use HasFactory;
     public $timestamps = false;
+  
+    protected $primaryKey='subject_id';
+
     protected $fillable=[
         'staff_id',
         'subject_name',
@@ -16,7 +19,8 @@ class Subject extends Model
         'course_id',    
         'sub_code',
         'TH_W',
-        'IN_W'   
+        'IN_W',
+        'total_credit'   
     ];
 
     public function staff()

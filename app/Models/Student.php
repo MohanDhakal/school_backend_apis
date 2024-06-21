@@ -15,14 +15,14 @@ class Student extends Model
         'dob',
         'grade',
         'address',
-        'guardian_contact',
-        'email',
         'current_rank',
         'joined_at',
         'image_uri',
         'major_subject',
         'is_active',
-        'roll_number'
+        'roll_number',
+        'course_id',
+        'class_id',
     ];
 
 }

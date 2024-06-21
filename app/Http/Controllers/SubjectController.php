@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Student;
+
 use App\Models\Subject;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class SubjectController extends Controller
 {
@@ -25,9 +23,34 @@ class SubjectController extends Controller
      * @param  int  $grade
      * @return \Illuminate\Http\Response
      */
-    public function all($grade)
+    public function getSubjectsFor($courseId)
     {
-
+        $subjects = Subject::where('course_id', $courseId)->get();
+        if ($subjects) {
+            return $subjects;
+        } else {
+            return  [
+                'success' => false,
+                'message' => "Could not find subjects for this course",
+            ];
+        }
+    }
+    /**
+     * Display a listing of the resource.
+     * @param  int  $grade
+     * @return \Illuminate\Http\Response
+     */
+    public function getSubjectDetail($stdId)
+    {
+        $subjects = Subject::where('subject_id', $stdId)->get();
+        if ($subjects) {
+            return $subjects;
+        } else {
+            return  [
+                'success' => false,
+                'message' => "Could not find subject detail",
+            ];
+        }
     }
 
 
@@ -39,7 +62,7 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $created = Subject::create($request->all());
         if ($created) {
             $response = [

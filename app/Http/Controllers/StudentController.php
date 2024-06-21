@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\StudentContact;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,9 +27,9 @@ class StudentController extends Controller
      * @param  int  $grade
      * @return \Illuminate\Http\Response
      */
-    public function all($grade)
+    public function all($class_id)
     {
-        $students = Student::where('grade', '=', $grade)
+        $students = Student::where('class_id', '=', $class_id)
             ->orderBy('roll_number', 'asc')
             ->paginate(5);
         return $students;
@@ -74,6 +75,50 @@ class StudentController extends Controller
             'message' => "error occured, please contact administrator",
         ];
     }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addContact(Request $request)
+    {
+
+        $data = $request->all();
+        $created =  StudentContact::create($data);
+        if ($created) {
+            $response = [
+                'success' => true,
+                'message' => "contact added successfully",
+            ];
+            return $response;
+        }
+        return  [
+            'success' => false,
+            'message' => "contact could not be added",
+        ];
+    }
+        /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteContact($id)
+    {
+        $deleted = StudentContact::destroy($id);
+        if ($deleted) {
+            return [ 
+                "success" => false,
+                "message" => "contact deleted sucessfully"
+            ];
+        }
+        return [
+            "success" => true,
+            "message" => "contact couldn't be deleted"
+        ];
+    }
+
 
     /**
      * Display the specified resource.
@@ -85,26 +130,41 @@ class StudentController extends Controller
     {
 
         $student = DB::table('students')->where('student_id', '=', $id)->first();
-        if ($student == null) {
-        }
+       
         return $student;
+    }
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getContact($id)
+    {
+
+        $student = DB::table('std_contact')->where('student_id', '=', $id)->first();
+        if($student){
+            return $student;
+
+        }else{
+            return [];
+        }
     }
 
     public function verify(Request $request)
     {
-        $roll_number =$request->input("roll_number");
-        $dob=$request->input("dob");
-        $grade=$request->input("grade");
+        $roll_number = $request->input("roll_number");
+        $dob = $request->input("dob");
+        $grade = $request->input("grade");
         $student = Student::where('roll_number', $roll_number)
-                    ->where('dob', $dob)
-                    ->where('grade', $grade)
-                    ->get();
-                    Log::info($student);
+            ->where('dob', $dob)
+            ->where('grade', $grade)
+            ->get();
+        Log::info($student);
         if ($student == null) {
             return [
                 'students:' => "empty"
             ];
-
         }
         return $student;
     }

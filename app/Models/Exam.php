@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Exam extends Model
 {
     use HasFactory;
+    protected $dateFormat = 'Y-m-d';
+    protected $table = 'exam';
     protected $fillable=[
-        'exam_type',// First Term, Second Term or Final      
+        'type',// First Term, Second Term or Final      
         'academic_year',
-        "started_at",
+        "start_date",
         "class_id"
     ];
 }
