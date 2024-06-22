@@ -85,6 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/members/delete/{id}', [MemberController::class, 'destroy']);
         Route::post('/results/add', [ResultsController::class, 'store']);
         Route::post('/results/gpa/add', [ResultsController::class, 'add_gpa']);
+        Route::post('/results/update/{id}', [ResultsController::class, 'update']);
 
         Route::get('/subjects', [SubjectController::class, 'index']);
         Route::post('/subjects/add', [SubjectController::class, 'store']);

@@ -49,6 +49,49 @@ class ResultsController extends Controller
         ];
     }
     /**
+     * update an existing resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     * 
+     */
+    public function update(Request $request, $id)
+    {
+        Log::info($request->all());
+        $result = Result::find($id);
+        // Check if the record exists
+        if (!$result) {
+            return response()->json(['message' => 'Result not found'], 404);
+        }
+        $subject_id = $request->input('subject_id');
+        $marks_type = $request->input('marks_type');
+        $grade = 'NG';
+        $marks =  $request->input('marks');      
+        $percentage = 0;
+        $subject = Subject::find($subject_id);
+        if ($marks_type == "IN") {
+            $percentage = ($marks / $subject->IN_W) * 100;
+        } else if ($marks_type == "TH") {
+            $percentage = ($marks / $subject->TH_W) * 100;
+        }
+        $grade = ResultsController::find_grade($percentage);
+        $request->merge(['grade' => $grade]);
+        Log::info($request->input("marks"));
+        $updated = $result->update($request->all());
+        if ($updated) {
+            $response = [
+                'success' => true,
+                'message' => "Result updated successfully",
+            ];
+            return $response;
+        }
+        return  [
+            'success' => false,
+            'message' => "error occured, please contact administrator!",
+        ];
+    }
+    /**
      * Return a string.
      *
      * @return string
@@ -154,9 +197,14 @@ class ResultsController extends Controller
             ->get();
         $aggregateCredit = 0.1;
         $aggregateGP = 0.1;
+        $failed = false;
 
         for ($i = 0; $i < count($results); $i++) {
             $result = $results[$i];
+            if ($result->grade == "NG") {
+                $failed = true;
+                break;
+            }
             try {
                 $sub_id = $result->subject_id;
                 $subject = Subject::where('subject_id', $sub_id)->get()->first();
@@ -173,7 +221,7 @@ class ResultsController extends Controller
                     $aggregateGP += ($sub_gp * $result->credit);
                 }
             } catch (\Throwable $th) {
-                Log::error("Exception Occured". $th->getMessage());
+                Log::error("Exception Occured" . $th->getMessage());
             }
         }
         if ($results == null) {
@@ -181,8 +229,13 @@ class ResultsController extends Controller
                 'results:' => "empty"
             ];
         }
+        if ($failed) {
+            return [
+                'CGPA:' => 0
+            ];
+        }
         return   [
-            'CGPA:' =>number_format( $aggregateGP / $aggregateCredit,2)
+            'CGPA:' => number_format($aggregateGP / $aggregateCredit, 2)
         ];
     }
 }
