@@ -80,17 +80,24 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/images/delete/{id}', [ImageController::class, 'destroy']);
 
         Route::post('/students/add', [StudentController::class, 'store']);
+        Route::post('/students/update/{id}', [StudentController::class, 'update']);
         Route::delete('/students/delete/{id}', [StudentController::class, 'destroy']);
+        Route::put('/students/update/status/{id}', [StudentController::class, 'toggle']);
 
         Route::delete('/members/delete/{id}', [MemberController::class, 'destroy']);
         Route::post('/results/add', [ResultsController::class, 'store']);
         Route::post('/results/gpa/add', [ResultsController::class, 'add_gpa']);
         Route::post('/results/update/{id}', [ResultsController::class, 'update']);
+        
 
         Route::get('/subjects', [SubjectController::class, 'index']);
         Route::post('/subjects/add', [SubjectController::class, 'store']);
-        Route::get('/subjects/{courseId}', [SubjectController::class, 'getSubjectsFor']);
-        Route::get('/subject/{subjectId}', [SubjectController::class, 'getSubjectDetail']);
+        Route::post('/subjects/update/{id}', [SubjectController::class, 'update']);
+        Route::delete('/subjects/delete/{id}', [SubjectController::class, 'destroy']);
+
+
+        Route::get('/subjects/course/{courseId}', [SubjectController::class, 'getSubjectsFor']);
+        Route::get('/subjects/{subjectId}', [SubjectController::class, 'getSubjectDetail']);
 
 
         Route::post('/course/add', [CourseController::class, 'store']);
@@ -105,7 +112,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/grades', [ClassController::class, 'index']);
         Route::delete('/grade/delete/{id}', [ClassController::class, 'destroy']);
         
-        Route::post('/exam/add', [ExamController::class, 'store']);
+        Route::post('/exams/add', [ExamController::class, 'store']);
         Route::get('/exams', [ExamController::class, 'index']);
-        Route::delete('/exam/delete/{id}', [ExamController::class, 'destroy']);
+        Route::get('/exams/years', [ExamController::class, 'getAcademicYear']);
+        Route::get('/exams/year/{year}', [ExamController::class, 'getExamsForYear']);
+        Route::delete('/exams/delete/{id}', [ExamController::class, 'destroy']);
 });

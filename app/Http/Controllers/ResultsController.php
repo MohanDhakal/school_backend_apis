@@ -153,7 +153,6 @@ class ResultsController extends Controller
 
     /**
      * Display the specified resource.
-     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -169,8 +168,15 @@ class ResultsController extends Controller
             $result = $results[$i];
             try {
                 $sub_id = $result->subject_id;
-                $subject = Subject::where('subject_id', $sub_id);
+                $subject = Subject::where('subject_id', $sub_id)->first();
                 $result->subject_name = $subject->subject_name;
+                $totalPercentage= $subject->TH_W+ $subject->IN_W;                
+                if($result->marks_type=="TH"){
+                    $result->credit=   ( $subject->total_credit) * ($subject->TH_W/$totalPercentage);
+                }else if($result->marks_type=="IN"){
+                    $result->credit=   ( $subject->total_credit) *  ($subject->IN_W/$totalPercentage);
+                }
+               $result->grade_point= ResultsController::find_GP($result->grade);
             } catch (\Throwable $th) {
                 Log::error("Exception Occured");
             }

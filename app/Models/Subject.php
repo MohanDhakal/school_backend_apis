@@ -17,6 +17,7 @@ class Subject extends Model
         'subject_name',
         'of_grade',
         'course_id',    
+        'class_id',
         'sub_code',
         'TH_W',
         'IN_W',

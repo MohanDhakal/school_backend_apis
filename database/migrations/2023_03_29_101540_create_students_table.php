@@ -22,7 +22,6 @@ return new class extends Migration
             $table->integer('roll_number')->nullable();
             $table->string('address');
             $table->string('email');
-            $table->string('guardian_contact')->nullable();
             $table->date('dob');
             $table->date('joined_at');
             $table->string('major_subject');

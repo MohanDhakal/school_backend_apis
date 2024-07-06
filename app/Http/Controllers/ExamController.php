@@ -42,17 +42,21 @@ class ExamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function getExamsForYear(int $year)
     {
-        //
+ 
+        $exams = Exam::where('academic_year', $year)->get();
+        return response()->json($exams);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * return all academic years
      */
-    public function edit(string $id)
+    public function getAcademicYear()
     {
-        //
+        $academicYears = Exam::distinct()->pluck('academic_year');
+        return $academicYears;
+       
     }
 
     /**

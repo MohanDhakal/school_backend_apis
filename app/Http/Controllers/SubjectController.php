@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SubjectController extends Controller
 {
@@ -42,7 +43,7 @@ class SubjectController extends Controller
      */
     public function getSubjectDetail($stdId)
     {
-        $subjects = Subject::where('subject_id', $stdId)->get();
+        $subjects = Subject::where('subject_id', $stdId)->first();
         if ($subjects) {
             return $subjects;
         } else {
@@ -62,7 +63,6 @@ class SubjectController extends Controller
      */
     public function store(Request $request)
     {
-
         $created = Subject::create($request->all());
         if ($created) {
             $response = [
@@ -76,6 +76,27 @@ class SubjectController extends Controller
             'message' => "error occured, please contact administrator",
         ];
     }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $data = $request->all();
+        $current_subject = Subject::find($id);
+        if ($current_subject) {           
+            $result=$current_subject->update($data);                      
+            return response()->json(['message' => 'Subject updated successfully', 'result' => $result], 200);                      
+        }
+        return  [
+            'success' => false,
+            'message' => "error occured while updating subject",
+        ];
+
+    }
 
 
     /**
@@ -86,17 +107,17 @@ class SubjectController extends Controller
      */
     public function destroy($id)
     {
-        // $student = Student::find($id);
-        // if ($student == null) {
-        //     return [
-        //         "success" => false,
-        //         "message" => "student does not exists"
-        //     ];
-        // }
-        // $student->delete();
-        // return [
-        //     "success" => true,
-        //     "message" => "student deleted"
-        // ];
+        $subject = Subject::find($id);
+        if ($subject == null) {
+            return [
+                "success" => false,
+                "message" => "student does not exists"
+            ];
+        }
+        $subject->delete();
+        return [
+            "success" => true,
+            "message" => "student deleted"
+        ];
     }
 }

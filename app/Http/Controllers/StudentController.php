@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Models\Student;
 use App\Models\StudentContact;
 use Illuminate\Support\Facades\Storage;
@@ -56,8 +55,8 @@ class StudentController extends Controller
             $path = Storage::putFile('public/students', $request->file('image'));
             $url = Storage::url($path);
             $image_uri = config('app.url')  . $url;
-            Log::info(config('app.url'));
-            Log::info($url);
+            // Log::info(config('app.url'));
+            // Log::info($url);
             $request->merge(['image_uri' => $image_uri]);
         }
         $data = $request->except(['image']);
@@ -189,7 +188,24 @@ class StudentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if ($request->has("image")) {
+            $path = Storage::putFile('public/students', $request->file('image'));
+            $url = Storage::url($path);
+            $image_uri = config('app.url')  . $url;
+            $request->merge(['image_uri' => $image_uri]);
+        }
+        $data = $request->all();
+        $data['is_active'] = $request['is_active'] === 'true';
+        $current_student = Student::find($id);
+        if ($current_student) {
+            $result=$current_student->update($data);
+            return response()->json(['message' => 'Student updated successfully', 'result' => $result], 200);          
+        }
+        return  [
+            'success' => false,
+            'message' => "error occured while updating student",
+        ];
+
     }
 
     /**
@@ -208,9 +224,20 @@ class StudentController extends Controller
             ];
         }
         $student->delete();
+        
         return [
             "success" => true,
             "message" => "student deleted"
         ];
+    }
+    public function toggle($id){   
+        $resource = Student::findOrFail($id);
+        $resource->is_active = !$resource->is_active;
+        $resource->save();
+        return response()->json([
+            'code'=>200,
+            'message' => 'Student Status toggled successfully',
+            'resource' => $resource,
+        ]);
     }
 }

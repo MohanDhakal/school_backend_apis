@@ -10,6 +10,7 @@ class Grade extends Model
     use HasFactory;
     protected $table = 'grade';
     protected $primaryKey='class_id';
+    
     protected $fillable=[
         'class_num',
         'class_name'
