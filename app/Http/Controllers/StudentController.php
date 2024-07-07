@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Student;
 use App\Models\StudentContact;
 use Illuminate\Support\Facades\Storage;
@@ -97,7 +98,7 @@ class StudentController extends Controller
             'message' => "contact could not be added",
         ];
     }
-        /**
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -107,7 +108,7 @@ class StudentController extends Controller
     {
         $deleted = StudentContact::destroy($id);
         if ($deleted) {
-            return [ 
+            return [
                 "success" => false,
                 "message" => "contact deleted sucessfully"
             ];
@@ -129,7 +130,7 @@ class StudentController extends Controller
     {
 
         $student = DB::table('students')->where('student_id', '=', $id)->first();
-       
+
         return $student;
     }
     /**
@@ -142,10 +143,9 @@ class StudentController extends Controller
     {
 
         $student = DB::table('std_contact')->where('student_id', '=', $id)->first();
-        if($student){
+        if ($student) {
             return $student;
-
-        }else{
+        } else {
             return [];
         }
     }
@@ -153,17 +153,14 @@ class StudentController extends Controller
     public function verify(Request $request)
     {
         $roll_number = $request->input("roll_number");
-        $dob = $request->input("dob");
-        $grade = $request->input("grade");
+        $grade = $request->input("class_id");
         $student = Student::where('roll_number', $roll_number)
-            ->where('dob', $dob)
-            ->where('grade', $grade)
-            ->get();
-        Log::info($student);
+            ->where('class_id', $grade)
+            ->get()->first();
         if ($student == null) {
-            return [
-                'students:' => "empty"
-            ];
+            return response()->json([
+                'error' => 'Student Not Found'
+            ], 400);
         }
         return $student;
     }
@@ -198,14 +195,13 @@ class StudentController extends Controller
         $data['is_active'] = $request['is_active'] === 'true';
         $current_student = Student::find($id);
         if ($current_student) {
-            $result=$current_student->update($data);
-            return response()->json(['message' => 'Student updated successfully', 'result' => $result], 200);          
+            $result = $current_student->update($data);
+            return response()->json(['message' => 'Student updated successfully', 'result' => $result], 200);
         }
         return  [
             'success' => false,
             'message' => "error occured while updating student",
         ];
-
     }
 
     /**
@@ -224,18 +220,19 @@ class StudentController extends Controller
             ];
         }
         $student->delete();
-        
+
         return [
             "success" => true,
             "message" => "student deleted"
         ];
     }
-    public function toggle($id){   
+    public function toggle($id)
+    {
         $resource = Student::findOrFail($id);
         $resource->is_active = !$resource->is_active;
         $resource->save();
         return response()->json([
-            'code'=>200,
+            'code' => 200,
             'message' => 'Student Status toggled successfully',
             'resource' => $resource,
         ]);
