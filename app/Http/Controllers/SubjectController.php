@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Grade;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +16,16 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::all();
+        $subjects = Subject::all()->map(function ($subject) {
+            // Assuming `grade_id` is the foreign key in the Subject model
+            $grade = Grade::find($subject->class_id);
+            // If a corresponding grade is found, add the class_num to the subject
+            if ($grade) {
+                $subject->class_num = $grade->class_num;
+            }
+
+            return $subject;
+        });
         return $subjects;
     }
 
@@ -87,15 +97,14 @@ class SubjectController extends Controller
     {
         $data = $request->all();
         $current_subject = Subject::find($id);
-        if ($current_subject) {           
-            $result=$current_subject->update($data);                      
-            return response()->json(['message' => 'Subject updated successfully', 'result' => $result], 200);                      
+        if ($current_subject) {
+            $result = $current_subject->update($data);
+            return response()->json(['message' => 'Subject updated successfully', 'result' => $result], 200);
         }
         return  [
             'success' => false,
             'message' => "error occured while updating subject",
         ];
-
     }
 
 
@@ -111,13 +120,13 @@ class SubjectController extends Controller
         if ($subject == null) {
             return [
                 "success" => false,
-                "message" => "student does not exists"
+                "message" => "subject does not exists"
             ];
         }
         $subject->delete();
         return [
             "success" => true,
-            "message" => "student deleted"
+            "message" => "subject deleted"
         ];
     }
 }

@@ -58,7 +58,6 @@ class ResultsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Log::info($request->all());
         $result = Result::find($id);
         // Check if the record exists
         if (!$result) {
@@ -242,6 +241,28 @@ class ResultsController extends Controller
         }
         return   [
             'CGPA:' => number_format($aggregateGP / $aggregateCredit, 2)
+        ];
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        Log::info($id);
+        $deleted = Result::destroy($id);
+        if (!$deleted) {
+            return [
+                "success" => false,
+                "message" => "result does not exist."
+            ];
+        }
+        return [
+            "success" => true,
+            "message" => "results deleted!"
         ];
     }
 }
