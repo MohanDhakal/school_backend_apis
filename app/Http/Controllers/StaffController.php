@@ -22,7 +22,22 @@ class StaffController extends Controller
         $sortedResults = Staff::orderByRaw('level_int + rank DESC')
             ->orderBy('joined_at', 'ASC')
             ->paginate(5);
-        foreach ($sortedResults as $row) {          
+        foreach ($sortedResults as $row) {
+            $row->dob = LaravelNepaliDate::from($row->dob)->toNepaliDate();
+            $row->joined_at = LaravelNepaliDate::from($row->joined_at)->toNepaliDate();
+        }
+        return $sortedResults;
+    }
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function all()
+    {
+        $sortedResults = Staff::orderByRaw('level_int + rank DESC')
+            ->orderBy('joined_at', 'ASC')->get();
+        foreach ($sortedResults as $row) {
             $row->dob = LaravelNepaliDate::from($row->dob)->toNepaliDate();
             $row->joined_at = LaravelNepaliDate::from($row->joined_at)->toNepaliDate();
         }
@@ -54,7 +69,7 @@ class StaffController extends Controller
 
         $created = Staff::create($data);
         if ($created) {
-            $response = [   
+            $response = [
                 'success' => true,
                 'message' => "staff added successfully",
             ];

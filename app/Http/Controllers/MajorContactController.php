@@ -17,11 +17,11 @@ class MajorContactController extends Controller
         $rows = MajorContact::all()->sortBy('position', SORT_NUMERIC);
         $staffIds = $rows->pluck('staff_id');
         $staffDetails = Staff::whereIn('id', $staffIds)->get()->keyBy('id');
-        // Attach the staff details to the corresponding rows
         $rowsWithStaffDetails = $rows->map(function ($row) use ($staffDetails) {
             $row->staff_detail = $staffDetails->get($row->staff_id);
             return $row;
-        });
+        })->values()->all();
+
         return $rowsWithStaffDetails;    
     }
      /**

@@ -38,6 +38,8 @@ Route::get('albums', [AlbumController::class, 'index']);
 Route::get('/images/album/{id}', [ImageController::class, 'show']);
 
 Route::get('staffs', [StaffController::class, 'index']);
+Route::get('staff/all', [StaffController::class, 'all']);
+
 Route::get('staffs/{id}', [StaffController::class, 'show']);
 Route::get('staffs/major/contacts', [MajorContactController::class, 'index']);
 
