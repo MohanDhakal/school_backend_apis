@@ -60,12 +60,12 @@ class StaffController extends Controller
         $data = $request->except(['image']);
         // $dateInBS = str_replace('/', '-', $request['dob']);
         $data['is_active'] = $request['is_active'] === 'true';
-        Log::info($request['dob']);
-        Log::info($request['joined_at']);
+        // Log::info($request['dob']);
+        // Log::info($request['joined_at']);
         $data['dob'] = LaravelNepaliDate::from($data['dob'])->toEnglishDate();
         $data['joined_at'] = LaravelNepaliDate::from($data['joined_at'])->toEnglishDate();
-        Log::info($data['dob']);
-        Log::info($data['joined_at']);
+        // Log::info($data['dob']);
+        // Log::info($data['joined_at']);
 
         $created = Staff::create($data);
         if ($created) {

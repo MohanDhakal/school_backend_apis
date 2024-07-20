@@ -29,7 +29,7 @@ return new class extends Migration
          // Drop foreign key constraints
          Schema::table('students', function (Blueprint $table) {
             $table->dropForeign(['course_id']);
-            $table->dropColumn('course_id');
+            $table->dropColumn('    course_id');
         });
     }
 };
