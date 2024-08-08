@@ -15,6 +15,7 @@ use App\Http\Controllers\ResultsController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
 use App\Models\MajorContact;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,7 @@ Route::get('/exams', [ExamController::class, 'index']);
 Route::get('/exams/years', [ExamController::class, 'getAcademicYear']);
 Route::get('/exams/year/{year}', [ExamController::class, 'getExamsForYear']);
 Route::get('/events', [EventController::class, 'index']);
+Route::get('/testimonials', [TestimonialController::class, 'index']);
 
 
 // protected routes
@@ -127,7 +129,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/events/add', [EventController::class, 'store']);
         Route::post('/events/update/{id}', [EventController::class, 'update']);
         Route::delete('/events/delete/{id}', [EventController::class, 'delete']);
-
+        Route::post('/testimonials/add', [TestimonialController::class, 'store']);
+        Route::delete('/testimonials/delete/{id}', [TestimonialController::class, 'delete']);
 
 
 });
