@@ -39,25 +39,25 @@ class ImageController extends Controller
             $folderPath = str_replace(base_path(), '', $path);
             // $relativePath = str_replace("public/", '', $folderPath);
             $base_url = asset($folderPath);
-
             foreach ($image as $key => $value) {
-                $name = time() . $key . '.' . $value->getClientOriginalExtension();                
+                $name = time() . $key . '.' . $value->getClientOriginalExtension();
                 $value->move($path, $name);
-                $image_uri = $base_url.'/'. $name;
+                $image_uri = $base_url . '/' . $name;
+                $updatedUrl = str_replace("public", '/', $image_uri);
+                Log::info($updatedUrl);
                 $data = [
                     'folder_id' => $album_id, // Replace with the desired ID
-                    'image_url' => $image_uri, // Replace with the desired folder name
+                    'image_url' => $updatedUrl, // Replace with the desired folder name
                 ];
-                $created=Image::create($data);
-                if($created){
+                $created = Image::create($data);
+                if ($created) {
                     Log::info("created successfully");
                 }
             }
             return [
-                "code"=> 200,
-                "message"=>"image sucessfully created"  
+                "code" => 200,
+                "message" => "image sucessfully created"
             ];
-
         } else {
             Log::info("no image data available");
         }
@@ -72,8 +72,8 @@ class ImageController extends Controller
     public function show($id)
     {
         $images = DB::table('images')
-        ->where('folder_id', '=', $id)
-        ->get();
+            ->where('folder_id', '=', $id)
+            ->get();
         return $images;
     }
 
@@ -97,17 +97,15 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        
-     DB::table('images')
-        ->where('folder_id', '=', $id)
-        ->delete();
+
+        DB::table('images')
+            ->where('folder_id', '=', $id)
+            ->delete();
         $album = Album::find($id);
         $album->delete();
         return [
             "success" => true,
             "message" => "album deleted"
-        ];   
-    
-    
+        ];
     }
 }

@@ -13,9 +13,7 @@ class Subject extends Model
     protected $primaryKey='subject_id';
 
     protected $fillable=[
-        'staff_id',
         'subject_name',
-        'of_grade',
         'course_id',    
         'class_id',
         'sub_code',

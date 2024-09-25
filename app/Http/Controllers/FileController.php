@@ -25,28 +25,21 @@ class FileController extends Controller
 
     public function upload(Request $request)
     {
-        $fileInputName = "file"; // Replace with the name attribute of your file input
-        $folder = "files/" . $request->input("folder"); // Specify the folder where you want to store the files
-
-        // Check if a file was uploaded
+        $fileInputName = 'file';
+        $folder = "files/" . $request->input("folder");
+        // Check if a file is present
         if ($request->hasFile($fileInputName)) {
             $file = $request->file($fileInputName);
-
             // Get the original file name
             $originalFileName = $file->getClientOriginalName();
-
             // Generate a unique date string (e.g., timestamp)
             $uniqueDate = date('YmdHis');
-
             // Append the unique date to the original file name
             $fileName = pathinfo($originalFileName, PATHINFO_FILENAME) . '_' . $uniqueDate . '.' . $file->getClientOriginalExtension();
-
             // Specify the storage disk (e.g., 'public' or 's3')
             $disk = 'public';
-
             // Upload the file to the specified disk and folder
             $filePath = $file->storeAs($folder, $fileName, $disk);
-
             // Return a JSON response with the file path
             return response()->json(['message' => 'File uploaded successfully', 'file_path' => $filePath], 200);
         }
@@ -73,5 +66,5 @@ class FileController extends Controller
             // File not found
             return response()->json(['message' => 'File not found'], 404);
         }
-    }   
+    }
 }

@@ -28,7 +28,7 @@ class StaffController extends Controller
         }
         return $sortedResults;
     }
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -60,12 +60,10 @@ class StaffController extends Controller
         $data = $request->except(['image']);
         // $dateInBS = str_replace('/', '-', $request['dob']);
         $data['is_active'] = $request['is_active'] === 'true';
-        // Log::info($request['dob']);
-        // Log::info($request['joined_at']);
+      
         $data['dob'] = LaravelNepaliDate::from($data['dob'])->toEnglishDate();
         $data['joined_at'] = LaravelNepaliDate::from($data['joined_at'])->toEnglishDate();
-        // Log::info($data['dob']);
-        // Log::info($data['joined_at']);
+        
 
         $created = Staff::create($data);
         if ($created) {
@@ -111,7 +109,11 @@ class StaffController extends Controller
     {
         $staff = Staff::find($id);
         if ($staff != null) {
-            Staff::where("id", $id)->update($request->except(["image"]));
+            $newRequest = $request->except(["image"]);
+            $newRequest['dob'] = LaravelNepaliDate::from($newRequest['dob'])->toEnglishDate();
+            $newRequest['joined_at'] = LaravelNepaliDate::from($newRequest['joined_at'])->toEnglishDate();
+            $data['is_active'] = $request['is_active'] === 'true';
+            Staff::where("id", $id)->update($newRequest);
 
             return [
                 "success" => true,

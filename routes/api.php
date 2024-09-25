@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EventController;
@@ -11,13 +13,13 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\MajorContactController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\QueriesController;
 use App\Http\Controllers\ResultsController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\UserController;
-use App\Models\MajorContact;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,15 +54,28 @@ Route::get('/files/{directory}', [FileController::class, 'index']);
 Route::post('/files/upload', [FileController::class, 'upload']);
 Route::post('/files/delete', [FileController::class, 'deleteFile']);
 Route::post('/feedback/add', [FeedbackController::class, 'store']);
+Route::post('/queries/add', [QueriesController::class, 'store']);
+Route::get('/queries/all', [QueriesController::class, 'index']);
 
-Route::get('posts', [PostController::class, 'index']);
-Route::get('posts/{id}', [PostController::class, 'show']);
-Route::get('posts/user/{id}', [PostController::class, 'author']);
+Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/{id}', [PostController::class, 'show']);
+Route::get('/posts/user/{id}', [PostController::class, 'author']);
+
+Route::get('/blogs', [BlogController::class, 'index']);
+Route::get('/blogs/page', [BlogController::class, 'forPage']);
+Route::get('/blogs/page/last', [BlogController::class, 'last']);
+Route::get('/blogs/related/category/{id}', [BlogController::class, 'blogs_except']);
+
+
+Route::get('/blogs/{id}', [BlogController::class, 'show']);
+Route::get('/blogs/user/{id}', [BlogController::class, 'writer']);
+Route::get('/blogs/category/{id}', [BlogController::class, 'my_blog']);
+Route::get('/categories', [CategoryController::class, 'index']);
 
 Route::get('/feedbacks', [FeedbackController::class, 'index']);
 
 Route::get('/members', [MemberController::class, 'index']);
-Route::post('add/member', [MemberController::class, 'store']);
+Route::post('/add/member', [MemberController::class, 'store']);
 Route::post('/results/display', [ResultsController::class, 'show_result']);
 Route::post('/students/verify', [StudentController::class, 'verify']);
 Route::get('/grades', [ClassController::class, 'index']);
@@ -78,7 +93,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/users', [UserController::class, 'index']);
         Route::get('/user', [UserController::class, 'show']);
         Route::post('/users/logout', [UserController::class, 'logout']);
-        
+
         Route::post('/staffs/add', [StaffController::class, 'store']);
         Route::delete('/staffs/delete/{id}', [StaffController::class, 'destroy']);
         Route::post('/staffs/update/{id}', [StaffController::class, 'update']);
@@ -86,7 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/staffs/major/contact/delete/{id}', [MajorContactController::class, 'delete']);
 
         Route::post('/posts/add', [PostController::class, 'store']);
-        Route::delete('posts/delete/{id}', [PostController::class, 'destroy']);
+        Route::delete('/posts/delete/{id}', [PostController::class, 'destroy']);
         Route::post('/posts/update/{id}', [PostController::class, 'update']);
         Route::post('/albums/add', [AlbumController::class, 'store']);
 
@@ -131,6 +146,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/events/delete/{id}', [EventController::class, 'delete']);
         Route::post('/testimonials/add', [TestimonialController::class, 'store']);
         Route::delete('/testimonials/delete/{id}', [TestimonialController::class, 'delete']);
+        Route::post('/blogs/add', [BlogController::class, 'store']);
+        Route::delete('blogs/delete/{id}', [BlogController::class, 'destroy']);
+        Route::post('/blogs/update/{id}', [BlogController::class, 'update']);
+        Route::delete('/blogs/delete/{id}', [BlogController::class, 'destroy']);
 
-
+        Route::post('/category/add', [CategoryController::class, 'store']);
 });

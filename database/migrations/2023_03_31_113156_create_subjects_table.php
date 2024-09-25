@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id('subject_id');
-            $table->foreignId('staff_id')->index();
+            $table->foreignId('staff_id')->index()->nullable();
             $table->foreign('staff_id')->references('id')->on('staff');
             $table->string('subject_name');
             $table->integer('of_grade');

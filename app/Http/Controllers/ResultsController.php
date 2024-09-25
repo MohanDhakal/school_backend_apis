@@ -76,7 +76,6 @@ class ResultsController extends Controller
         }
         $grade = ResultsController::find_grade($percentage);
         $request->merge(['grade' => $grade]);
-        Log::info($request->input("marks"));
         $updated = $result->update($request->all());
         if ($updated) {
             $response = [
@@ -169,6 +168,7 @@ class ResultsController extends Controller
                 $sub_id = $result->subject_id;
                 $subject = Subject::where('subject_id', $sub_id)->first();
                 $result->subject_name = $subject->subject_name;
+                $result->subject_code=$subject->sub_code;
                 $totalPercentage= $subject->TH_W+ $subject->IN_W;                
                 if($result->marks_type=="TH"){
                     $result->credit=   ( $subject->total_credit) * ($subject->TH_W/$totalPercentage);

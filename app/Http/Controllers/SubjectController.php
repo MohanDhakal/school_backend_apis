@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Grade;
 use App\Models\Subject;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class SubjectController extends Controller
 {
@@ -77,7 +76,7 @@ class SubjectController extends Controller
         if ($created) {
             $response = [
                 'success' => true,
-                'message' => "subject added successfully",
+                'message' => "subject added successfully!",
             ];
             return $response;
         }
